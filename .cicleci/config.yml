@@ -22,10 +22,10 @@ jobs:
           paths:
             - vendor/bundle
 
-workflows:
-  version: 2
-    build_and_test:
-      jobs:
-        - build
+    steps:
+      - run:
+          name: run specs
+          command: |
+          bundle exec rspec
 
 
