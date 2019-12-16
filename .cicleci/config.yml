@@ -22,15 +22,11 @@ jobs:
           key: gem-cache-v1-{{ checksum "Gemfile.lock" }}
           paths:
             - vendor/bundle
-jobs:
-    test:
-      - run:
-          name: Run tests
-          command: bundle exec rspec
+
 workflows:
   version: 2
     build_and_test:
       jobs:
         - build
-        - test
+
 
