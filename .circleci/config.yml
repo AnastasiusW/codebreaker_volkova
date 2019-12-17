@@ -22,8 +22,6 @@ jobs:
           paths:
             - vendor/bundle
 
-    steps:
       - run:
-          name: run specs
-          command: |
-          bundle exec rspec
+          name: Run tests
+          command: bundle exec rspec
