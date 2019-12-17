@@ -21,7 +21,19 @@ jobs:
           key: gem-cache-v1-{{ checksum "Gemfile.lock" }}
           paths:
             - vendor/bundle
-
+  test:
       - run:
           name: Run tests
           command: bundle exec rspec
+
+  lintering:
+      - run:
+          name: Run linter
+          command: bundle exec rubocop
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build
+      - test
+      - lintering
