@@ -1,19 +1,39 @@
+version: 2.1
 
-version: 2
-jobs:
-  build:
+executors:
+  default:
+    working_directory: ~/repo
+    description: The official CircleCI Ruby Docker image
     docker:
-      - image: circleci/ruby:2.6.3-node
-     steps:
-      - restore_cache:
-          keys:
-            - source-v1-{{ checksum "Gemfile.lock" }}
-            - source-v1-
+      - image: circleci/ruby:2.6.3-node-browsers
+        environment:
+          RAILS_ENV: test
 
-      - run: bundle install --path vendor/bundle
+caches:
+  - &bundle_cache v1-repo-{{ checksum "Gemfile.lock" }}
+ run_specs:
+    steps:
+      - run:
+          name: run specs
+          command: |
+            mkdir /tmp/test-results
+            TEST_FILES="$(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)"
+            bundle exec rspec --format progress \
+                              --out /tmp/test-results/rspec.xml \
+                              $TEST_FILES
+setup_environment:
+  steps:
+    - checkout
+    - restore_cache:
+        key: *bundle_cache
+    - run: bundle install --path vendor/bundle
+    - save_cache:
+        key: *bundle_cache
+        paths:
+          - vendor/bundle
 
-      - save_cache:
-          key: source-v1-{{ checksum "Gemfile.lock" }}
-          paths:
-            - vendor/bundle
-
+workflows:
+  version: 2.1
+  build:
+    jobs:
+      - run_specs
