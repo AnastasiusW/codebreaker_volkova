@@ -30,3 +30,7 @@ jobs:
           name: Run rubocop
           command: bundle exec rubocop
 
+      - run:
+          name: Run fasterer
+          command: bundle exec fasterer
+
