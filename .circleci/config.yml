@@ -39,12 +39,10 @@ jobs:
   lintering:
     executor: default
     steps:
-      - setup_environment
       - run_linters
   run_specs:
     executor: default
     steps:
-      - setup_environment
       - run_specs
 
 workflows:
