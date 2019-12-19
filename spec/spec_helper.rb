@@ -9,7 +9,6 @@ SimpleCov.start do
   minimum_coverage 95
 end
 
-Dir[Dir.pwd + '/lib/**/*.rb'].each { |f| require f }
 Dir[Dir.pwd + '/spec/support/**/*.rb'].each { |f| require f }
 
 RSpec.configure do |config|

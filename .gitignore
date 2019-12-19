@@ -7,6 +7,5 @@
 /spec/reports/
 /tmp/
 store.yml
-spec/support/fixtures/stats.yml
 # rspec failure tracking
 .rspec_status

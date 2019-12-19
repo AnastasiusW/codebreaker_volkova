@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-RSpec.describe Game do
+RSpec.describe CodebreakerVolkova::Game do
   subject(:game) { described_class.new }
-
+  let(:module_class) { CodebreakerVolkova::Game }
   PATH_FILE = 'spec/support/fixtures/stats.yml'
   VALID_NAME_LENGTH = (3..20).freeze
 
@@ -31,21 +31,21 @@ RSpec.describe Game do
     context 'guess is empty' do
       let(:user_guess) { '' }
       it 'raises EmptyStringError' do
-        expect { game.check_result(user_guess) }.to raise_error(Game::EmptyStringError)
+        expect { game.check_result(user_guess) }.to raise_error(module_class::EmptyStringError)
       end
     end
 
     context 'check_length_guess' do
       let(:user_guess) { '11' }
       it 'raises GuessLengthException' do
-        expect { game.check_result(user_guess) }.to raise_error(Game::GuessLengthError)
+        expect { game.check_result(user_guess) }.to raise_error(module_class::GuessLengthError)
       end
     end
 
     context 'check_constituents_guess' do
       let(:user_guess) { 'aaaa' }
       it 'raises GuessException' do
-        expect { game.check_result(user_guess) }.to raise_error(Game::GuessError)
+        expect { game.check_result(user_guess) }.to raise_error(module_class::GuessError)
       end
     end
   end
@@ -60,7 +60,7 @@ RSpec.describe Game do
     context 'name is empty' do
       let(:user_name) { '' }
       it 'raises EmptyStringError' do
-        expect { game.add_name(user_name) }.to raise_error(Game::EmptyStringError)
+        expect { game.add_name(user_name) }.to raise_error(module_class::EmptyStringError)
       end
     end
 
@@ -74,17 +74,18 @@ RSpec.describe Game do
     context 'name is short' do
       let(:user_name) { 'a' * VALID_NAME_LENGTH.max.succ }
       it 'raises UserNameException' do
-        expect { game.add_name(user_name) }.to raise_error(Game::UserNameError)
+        expect { game.add_name(user_name) }.to raise_error(module_class::UserNameError)
       end
     end
   end
+
   describe '#add_difficulty' do
     let(:user_difficulty) { 'easy' }
 
     context 'DifficultyException ' do
       let(:user_difficulty) { 'easymedium' }
       it 'raises DifficultyException ' do
-        expect { game.add_difficulty(user_difficulty) }.to raise_error(Game::DifficultyError)
+        expect { game.add_difficulty(user_difficulty) }.to raise_error(module_class::DifficultyError)
       end
     end
 
@@ -98,15 +99,23 @@ RSpec.describe Game do
     context 'not empty difficulty ' do
       let(:user_difficulty) { '' }
       it 'raises EmptyStringError' do
-        expect { game.add_difficulty(user_difficulty) }.to raise_error(Game::EmptyStringError)
+        expect { game.add_difficulty(user_difficulty) }.to raise_error(module_class::EmptyStringError)
       end
     end
   end
 
   describe '#attempts?' do
-    it 'must return true' do
+    it 'be when player has attempts' do
       game.add_difficulty('easy')
       expect(game.attempts?).to eq(true)
+    end
+
+    it 'when player has no more attempts' do
+      allow(game).to receive(:generate_secret_number) { '1234'.each_char.map(&:to_i) }
+      game.start
+      game.add_difficulty('hell')
+      6.times { game.check_result('6666') }
+      expect(game.attempts?).to eq(false)
     end
   end
 
@@ -129,12 +138,12 @@ RSpec.describe Game do
     let(:file) { double('file') }
     let(:hash) do
       {
-        Name: 'Test_user',
-        Difficulty: 'easy',
-        Attempts_Total: 15,
-        Attempts_Used: 15,
-        Hints_Total: 2,
-        Hints_Used: 2
+        name: 'Test_user',
+        difficulty: 'easy',
+        attempts_total: 15,
+        attempts_used: 15,
+        hints_total: 2,
+        hints_used: 2
       }
     end
     before do
@@ -158,12 +167,12 @@ RSpec.describe Game do
     let(:file) { double('file') }
     let(:hash) do
       {
-        Name: 'Test_user',
-        Difficulty: 'easy',
-        Attempts_Total: 15,
-        Attempts_Used: 15,
-        Hints_Total: 2,
-        Hints_Used: 2
+        name: 'Test_user',
+        difficulty: 'easy',
+        attempts_total: 15,
+        attempts_used: 15,
+        hints_total: 2,
+        hints_used: 2
       }
     end
     before do
