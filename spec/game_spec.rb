@@ -105,7 +105,7 @@ RSpec.describe CodebreakerVolkova::Game do
   end
 
   describe '#attempts?' do
-    it 'when player has attempts' do
+    it 'be when player has attempts' do
       game.add_difficulty('easy')
       expect(game.attempts?).to eq(true)
     end
