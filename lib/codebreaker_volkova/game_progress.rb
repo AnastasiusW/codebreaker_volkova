@@ -6,7 +6,7 @@ module CodebreakerVolkova
     include Validator
 
     attr_reader :username, :difficulty, :hints, :attempts, :attempts_total,
-                :hints_total, :secret_code
+                :hints_total, :secret_code, :game_over
 
     FILENAME = 'store.yml'
     SIGN_CONSTANT = 4
@@ -42,10 +42,6 @@ module CodebreakerVolkova
       @game_over = true if result == GameBusinessLogic::RESULT_PLUS * 4
       @attempts -= 1
       result
-    end
-
-    def check_status_game
-      @game_over
     end
 
     def attempts?

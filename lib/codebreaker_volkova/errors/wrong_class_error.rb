@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
-module Errors
-  class WrongClassError < StandardError
-    def initialize
-      super('Wrong class!')
+module CodebreakerVolkova
+  module Errors
+    class WrongClassError < StandardError
+      def initialize
+        super('Wrong class!')
+      end
     end
   end
 end

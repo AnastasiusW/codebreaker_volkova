@@ -5,6 +5,23 @@ RSpec.describe CodebreakerVolkova::Game do
   let(:module_class) { CodebreakerVolkova::Game }
   PATH_FILE = 'spec/support/fixtures/stats.yml'
   VALID_NAME_LENGTH = (3..20).freeze
+  DIFFICULTIES_TEST = {
+    easy: {
+      attempts: 15,
+      hints: 2,
+      level: 3
+    },
+    medium: {
+      attempts: 10,
+      hints: 1,
+      level: 2
+    },
+    hell: {
+      attempts: 5,
+      hints: 1,
+      level: 1
+    }
+  }.freeze
 
   describe '#check_result' do
     [{ secret: '6543', guess: '5643', result: '++--' },
@@ -53,8 +70,9 @@ RSpec.describe CodebreakerVolkova::Game do
   describe '#add_name' do
     let(:user_name) { 'Olivia' }
 
-    it 'Check add_name' do
-      expect(game.add_name(user_name)).to eq(user_name)
+    it 'Check that username was set' do
+      game.add_name(user_name)
+      expect(game.username).to eq(user_name)
     end
 
     context 'name is empty' do
@@ -67,7 +85,7 @@ RSpec.describe CodebreakerVolkova::Game do
     context 'name is nil' do
       let(:user_name) { nil }
       it 'raises NilStringError' do
-        expect { game.add_name(user_name) }.to raise_error
+        expect { game.add_name(user_name) }.to raise_error(module_class::NilStringError)
       end
     end
 
@@ -80,7 +98,33 @@ RSpec.describe CodebreakerVolkova::Game do
   end
 
   describe '#add_difficulty' do
-    let(:user_difficulty) { 'easy' }
+    context 'when set attributes correctly ' do
+      let(:user_difficulty) { 'easy' }
+      let(:attempts) { DIFFICULTIES_TEST.dig(user_difficulty.to_sym, :attempts) }
+      let(:hints) {  DIFFICULTIES_TEST.dig(user_difficulty.to_sym, :hints) }
+
+      it 'it shout be set @attempts_total' do
+        game.add_difficulty(user_difficulty)
+        expect(game.difficulty).to eq(user_difficulty)
+      end
+
+      it 'it shout be set @attempts' do
+        game.add_difficulty(user_difficulty)
+        expect(game.difficulty).to eq(user_difficulty)
+        expect(game.attempts).to eq(attempts)
+      end
+
+      it 'it shout be set @hints_total' do
+        game.add_difficulty(user_difficulty)
+        expect(game.difficulty).to eq(user_difficulty)
+        expect(game.hints_total).to eq(hints)
+      end
+
+      it 'it shout be set @hints' do
+        game.add_difficulty(user_difficulty)
+        expect(game.hints).to eq(hints)
+      end
+    end
 
     context 'DifficultyException ' do
       let(:user_difficulty) { 'easymedium' }
@@ -92,7 +136,7 @@ RSpec.describe CodebreakerVolkova::Game do
     context 'not nill difficulty ' do
       let(:user_difficulty) { nil }
       it 'raises NilStringError ' do
-        expect { game.add_difficulty(user_difficulty) }.to raise_error
+        expect { game.add_difficulty(user_difficulty) }.to raise_error(module_class::NilStringError)
       end
     end
 
@@ -111,7 +155,7 @@ RSpec.describe CodebreakerVolkova::Game do
     end
 
     it 'when player has no more attempts' do
-      allow(game).to receive(:generate_secret_number) { '1234'.each_char.map(&:to_i) }
+      allow(game).to receive(:generate_secret_number) { [1, 2, 3, 4] }
       game.start
       game.add_difficulty('hell')
       6.times { game.check_result('6666') }
@@ -125,12 +169,6 @@ RSpec.describe CodebreakerVolkova::Game do
       subject.start
       game.add_difficulty('easy')
       expect(game.hints?.to_s).to match(/^[1-4]$/)
-    end
-  end
-  describe '#check_status_game' do
-    it 'check_status_game must return false' do
-      subject.start
-      expect(game.check_status_game).to eq(false)
     end
   end
 
