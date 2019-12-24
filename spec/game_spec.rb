@@ -102,26 +102,26 @@ RSpec.describe CodebreakerVolkova::Game do
       let(:user_difficulty) { 'easy' }
       let(:attempts) { DIFFICULTIES_TEST.dig(user_difficulty.to_sym, :attempts) }
       let(:hints) {  DIFFICULTIES_TEST.dig(user_difficulty.to_sym, :hints) }
-
-      it 'it shout be set @attempts_total' do
+      before do
         game.add_difficulty(user_difficulty)
+      end
+      it 'it shout be set @difficulty' do
         expect(game.difficulty).to eq(user_difficulty)
       end
 
+      it 'it shout be set @attempts_total' do
+        expect(game.attempts_total).to eq(attempts)
+      end
+
       it 'it shout be set @attempts' do
-        game.add_difficulty(user_difficulty)
-        expect(game.difficulty).to eq(user_difficulty)
         expect(game.attempts).to eq(attempts)
       end
 
       it 'it shout be set @hints_total' do
-        game.add_difficulty(user_difficulty)
-        expect(game.difficulty).to eq(user_difficulty)
         expect(game.hints_total).to eq(hints)
       end
 
       it 'it shout be set @hints' do
-        game.add_difficulty(user_difficulty)
         expect(game.hints).to eq(hints)
       end
     end
