@@ -1,0 +1,16 @@
+
+Style/Documentation:
+  Enabled: false
+
+Metrics/LineLength:
+    Max: 120
+
+Style/FrozenStringLiteralComment:
+  Enabled: true
+
+Metrics/BlockLength:
+  ExcludedMethods: ['describe','context']
+
+Layout/DefEndAlignment:
+  AutoCorrect: true
+
