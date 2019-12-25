@@ -67,7 +67,7 @@ module CodebreakerVolkova
 
     def convert_to_hash
       {
-        name: @user_name,
+        name: @username,
         difficulty: @difficulty,
         attempts_total: @attempts_total,
         attempts_used: @attempts_total - @attempts,
@@ -82,7 +82,7 @@ module CodebreakerVolkova
 
       documents = YAML.load_stream(File.open(filename_path))
       documents.map.sort_by do |item|
-        [take_level_of_difficulty(item[:Difficulty]), item[:Attempts_Used], item[:Hints_Used]]
+        [take_level_of_difficulty(item[:difficulty]), item[:attempts_used], item[:hints_used]]
       end
     end
 

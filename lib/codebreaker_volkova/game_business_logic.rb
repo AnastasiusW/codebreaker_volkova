@@ -45,7 +45,7 @@ module CodebreakerVolkova
     end
 
     def take_level_of_difficulty(difficulty)
-      DIFFICULTIES.dig(difficulty, :level)
+      DIFFICULTIES.dig(difficulty.to_sym, :level)
     end
   end
 end
